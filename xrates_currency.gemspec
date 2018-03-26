@@ -2,8 +2,8 @@ Gem::Specification.new do |s|
   s.name        = "xrates_currency"
   s.version     = "3.4.0"
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Shane Emmons"]
-  s.email       = ["semmons99@gmail.com"]
+  s.authors     = ["Phil Smy"]
+  s.email       = ["phil@philsmy.com"]
   s.homepage    = "http://philsmy.github.com/xrates_currency"
   s.summary     = "Access the XRates Currency exchange rate data."
   s.description = "XratesCurrency extends Money::Bank::Base and gives you access to the current XRate Currency exchange rates."
