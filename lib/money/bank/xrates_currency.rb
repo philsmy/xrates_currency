@@ -145,7 +145,7 @@ class Money
       #
       # @return [URI::HTTP]
       def build_uri(from, to)
-        uri = URI::HTTP.build(
+        uri = URI::HTTPS.build(
           :host  => SERVICE_HOST,
           :path  => SERVICE_PATH,
           :query => "from=#{from.iso_code}&to=#{to.iso_code}&amount=1"
