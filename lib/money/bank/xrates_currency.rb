@@ -10,15 +10,11 @@ class Money
     end
 
     class XratesCurrency < Money::Bank::VariableExchange
-
-
-      SERVICE_HOST = "x-rates.com"
-      SERVICE_PATH = "/calculator"
-
+      SERVICE_HOST = 'x-rates.com'.freeze
+      SERVICE_PATH = '/calculator'.freeze
 
       # @return [Hash] Stores the currently known rates.
       attr_reader :rates
-
 
       class << self
         # @return [Integer] Returns the Time To Live (TTL) in seconds.
@@ -123,18 +119,15 @@ class Money
       #
       # @return [BigDecimal] The requested rate.
       def fetch_rate(from, to)
-
-        from, to = Currency.wrap(from), Currency.wrap(to)
+        from = Currency.wrap(from)
+        to = Currency.wrap(to)
 
         data = build_uri(from, to).read
-        rate = extract_rate(data);
+        rate = extract_rate(data)
 
-        if (rate < 0.1)
-          rate = 1/extract_rate(build_uri(to, from).read)
-        end
+        rate = 1 / extract_rate(build_uri(to, from).read) if rate < 0.1
 
         rate
-
       end
 
       ##
@@ -146,9 +139,9 @@ class Money
       # @return [URI::HTTP]
       def build_uri(from, to)
         uri = URI::HTTPS.build(
-          :host  => SERVICE_HOST,
-          :path  => SERVICE_PATH,
-          :query => "from=#{from.iso_code}&to=#{to.iso_code}&amount=1"
+          host: SERVICE_HOST,
+          path: SERVICE_PATH,
+          query: "from=#{from.iso_code}&to=#{to.iso_code}&amount=1"
         )
       end
 
@@ -160,12 +153,12 @@ class Money
       # @return [BigDecimal]
       def extract_rate(data)
         case data
-        when /<span class=bld>(\d+\.?\d*) [A-Z]{3}<\/span>/
-          BigDecimal($1)
+        when %r{<span class=bld>(\d+\.?\d*) [A-Z]{3}</span>}
+          BigDecimal(Regexp.last_match(1))
         when /Could not convert\./
           raise UnknownRate
-        when /<span class=\"ccOutputRslt\">(\d+\.?\d*)</
-          BigDecimal($1)
+        when /<span class="ccOutputRslt">(\d+\.?\d*)</
+          BigDecimal(Regexp.last_match(1))
         else
           raise XrateCurrencyFetchError
         end
